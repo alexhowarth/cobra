@@ -789,17 +789,18 @@ func TestPersistentRequiredFlags(t *testing.T) {
 func TestInheritedPersistentNotRequiredFlags(t *testing.T) {
 	parent := &Command{Use: "parent", Run: emptyRun}
 
-	var foo1 string
-
-	parent.PersistentFlags().StringVar(&foo1, "foo1", "", "foo1")
+	parent.PersistentFlags().String("foo1", "", "")
 	parent.MarkPersistentFlagRequired("foo1")
 
 	child := &Command{Use: "child", Run: emptyRun}
-	child.MarkInheritedPersistentFlagNotRequired("foo1")
 
+	// child inherits parent flags
 	parent.AddCommand(child)
 
-	output, err := executeCommand(parent, "child") //, "--foo1=bar")
+	// Mark flag as Not Required on child
+	child.MarkInheritedPersistentFlagNotRequired("foo1")
+
+	output, err := executeCommand(parent, "child")
 	if output != "" {
 		t.Errorf("Unexpected output: %v", err)
 	}
