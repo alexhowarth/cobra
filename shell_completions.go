@@ -18,6 +18,11 @@ func (c *Command) MarkPersistentFlagRequired(name string) error {
 	return MarkFlagRequired(c.PersistentFlags(), name)
 }
 
+// MarkInheritedPersistentFlagNotRequired to unset the inherited flag
+func (c *Command) MarkInheritedPersistentFlagNotRequired(name string) error {
+	return c.InheritedFlags().SetAnnotation(name, BashCompOneRequiredFlag, []string{"false"})
+}
+
 // MarkFlagRequired instructs the various shell completion implementations to
 // prioritize the named flag when performing completion,
 // and causes your command to report an error if invoked without the flag.

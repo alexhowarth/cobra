@@ -786,6 +786,25 @@ func TestPersistentRequiredFlags(t *testing.T) {
 	}
 }
 
+func TestInheritedPersistentNotRequiredFlags(t *testing.T) {
+	parent := &Command{Use: "parent", Run: emptyRun}
+
+	var foo1 string
+
+	parent.PersistentFlags().StringVar(&foo1, "foo1", "", "foo1")
+	parent.MarkPersistentFlagRequired("foo1")
+
+	child := &Command{Use: "child", Run: emptyRun}
+	child.MarkInheritedPersistentFlagNotRequired("foo1")
+
+	parent.AddCommand(child)
+
+	output, err := executeCommand(parent, "child") //, "--foo1=bar")
+	if output != "" {
+		t.Errorf("Unexpected output: %v", err)
+	}
+}
+
 func TestPersistentRequiredFlagsWithDisableFlagParsing(t *testing.T) {
 	// Make sure a required persistent flag does not break
 	// commands that disable flag parsing
