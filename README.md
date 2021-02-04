@@ -371,6 +371,13 @@ global flags, assign a flag as a persistent flag on the root.
 rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
 ```
 
+Persistent inherited flags can be removed from a command after they have been
+added to the parent(s).
+
+```go
+childCmd.MarkInheritedPersistentFlagNotRequired("foo")
+```
+
 ### Local Flags
 
 A flag can also be assigned locally, which will only apply to that specific command.
