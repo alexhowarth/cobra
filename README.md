@@ -371,13 +371,6 @@ global flags, assign a flag as a persistent flag on the root.
 rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
 ```
 
-Persistent inherited flags can be removed from a command after they have been
-added to the parent(s).
-
-```go
-childCmd.MarkInheritedPersistentFlagNotRequired("foo")
-```
-
 ### Local Flags
 
 A flag can also be assigned locally, which will only apply to that specific command.
@@ -430,6 +423,13 @@ Or, for persistent flags:
 ```go
 rootCmd.PersistentFlags().StringVarP(&Region, "region", "r", "", "AWS region (required)")
 rootCmd.MarkPersistentFlagRequired("region")
+```
+
+Persistent required flags that are inherited from a parent command can be removed from an individual command:
+
+```go
+rootCmd.AddCommand(childCmd)
+childCmd.MarkInheritedPersistentFlagNotRequired("region")
 ```
 
 ## Positional and Custom Arguments
